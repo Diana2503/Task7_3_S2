@@ -204,7 +204,7 @@ public class GraphDemoFrame extends JFrame {
                     Class clz = Class.forName("ru.vsu.cs.course1.graph.AdjMatrixGraph");
                     AdjMatrixGraph graph = (AdjMatrixGraph) GraphUtils.fromStr(textAreaGraphFile.getText(), clz);
                     showSystemOut(() -> {
-                        System.out.println("Минимальна длина цикла = " + graph.findShortCycle());
+                        System.out.println("Минимальна длина цикла = " + graph.findMin());
                     });
                     GraphDemoFrame.this.graph = graph;
                     panelGraphPainter.paint(dotToSvg(graph.toDot()));
@@ -216,23 +216,11 @@ public class GraphDemoFrame extends JFrame {
         });
     }
 
-    /**
-     * Преобразование dot-записи в svg-изображение (с помощью Graphviz)
-     *
-     * @param dotSrc dot-запись
-     * @return svg
-     * @throws IOException
-     */
     private static String dotToSvg(String dotSrc) throws IOException {
         MutableGraph g = new Parser().read(dotSrc);
         return Graphviz.fromGraph(g).render(Format.SVG).toString();
     }
 
-    /**
-     * Выполнение действия с выводом стандартного вывода в окне (textAreaSystemOut)
-     *
-     * @param action Выполняемое действие
-     */
     private void showSystemOut(Runnable action) {
         PrintStream oldOut = System.out;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

@@ -3,29 +3,17 @@ package ru.vsu.cs.course1.graph;
 import java.util.Arrays;
 import java.util.Iterator;
 
-/**
- * Реализация графа на основе матрицы смежности
- */
 public class AdjMatrixGraph implements Graph {
 
     private boolean[][] adjMatrix = null;
     private int vCount = 0;
     private int eCount = 0;
 
-    /**
-     * Конструктор
-     *
-     * @param vertexCount Кол-во вершин графа (может увеличиваться при добавлении ребер)
-     */
     public AdjMatrixGraph(int vertexCount) {
         adjMatrix = new boolean[vertexCount][vertexCount];
         vCount = vertexCount;
     }
 
-    /**
-     * Конструктор без парметров
-     * (лучше не использовать, т.к. при добавлении вершин каждый раз пересоздается матрица)
-     */
     public AdjMatrixGraph() {
         this(0);
     }
@@ -53,7 +41,6 @@ public class AdjMatrixGraph implements Graph {
         if (!adjMatrix[v1][v2]) {
             adjMatrix[v1][v2] = true;
             eCount++;
-            // для наследников
             if (!(this instanceof Digraph)) {
                 adjMatrix[v2][v1] = true;
             }
@@ -65,7 +52,6 @@ public class AdjMatrixGraph implements Graph {
         if (adjMatrix[v1][v2]) {
             adjMatrix[v1][v2] = false;
             eCount--;
-            // для наследников
             if (!(this instanceof Digraph)) {
                 adjMatrix[v2][v1] = false;
             }
@@ -109,22 +95,20 @@ public class AdjMatrixGraph implements Graph {
         };
     }
 
-
-
-    public int findShortCycle() {
+    public int findMin() {
         int[] min = new int[1];
         min[0] = -1;
         for (int i = 0; i < vCount; i++) {
-            find(i, new boolean[vCount], i, min);
+            findShortCycle(i, new boolean[vCount], i, min);
         }
         return min[0];
     }
 
-    private void find(int from, boolean[] was, int curr, int[] min) {
-        if (from == curr && was[curr]) {
+    private void findShortCycle(int from, boolean[] wasCycle, int curr, int[] min) {
+        if (from == curr && wasCycle[curr]) {
             int length = 0;
-            for (boolean wa : was) {
-                if (wa) {
+            for (boolean was : wasCycle) {
+                if (was) {
                     length++;
                 }
             }
@@ -132,15 +116,15 @@ public class AdjMatrixGraph implements Graph {
                 min[0] = length;
             }
             return;
-        } else if(was[curr]) {
+        } else if (wasCycle[curr]) {
             return;
         }
 
-        was[curr] = true;
+        wasCycle[curr] = true;
 
         for (int i = 0; i < adjMatrix.length; i++) {
             if (adjMatrix[curr][i]) {
-                find(from, was.clone(), i, min);
+                findShortCycle(from, wasCycle.clone(), i, min);
             }
         }
     }

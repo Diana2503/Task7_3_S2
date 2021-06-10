@@ -3,15 +3,13 @@ package ru.vsu.cs.course1.graph;
 import guru.nidi.graphviz.model.Link;
 import guru.nidi.graphviz.model.MutableGraph;
 import guru.nidi.graphviz.parse.Parser;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
-/**
- * Утилиты работы с графами
- */
 public class GraphUtils {
 
     public static Graph fromStr(String str, Class clz) throws IOException, InstantiationException, IllegalAccessException {
